@@ -10,5 +10,6 @@ data class Person(
     val birthYear: String,
     val gender: String,
     val homeworld: String,
-    val url: String
+    val url: String,
+    val films: List<String> = emptyList()
 )

@@ -3,18 +3,31 @@ package com.slashgil.starwars.presentation.ui
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.slashgil.starwars.domain.model.Person
 import com.slashgil.starwars.presentation.mvi.StarWarsIntent
 import com.slashgil.starwars.presentation.mvi.StarWarsUiState
+import com.slashgil.starwars.util.SwapiUrlUtils
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +37,11 @@ fun HubScreen(
     sharedTransitionScope: SharedTransitionScope? = null,
     animatedVisibilityScope: AnimatedVisibilityScope? = null
 ) {
+    @Suppress("DEPRECATION")
+    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
+    @Suppress("DEPRECATION")
+    val isCompact = windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -68,7 +86,8 @@ fun HubScreen(
                             character = character,
                             onClick = { onIntent(StarWarsIntent.OnCharacterClicked(character.url)) },
                             sharedTransitionScope = sharedTransitionScope,
-                            animatedVisibilityScope = animatedVisibilityScope
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            isCompact = isCompact
                         )
                     }
                     if (uiState.isLoadingMore) {
@@ -101,49 +120,71 @@ fun CharacterItem(
     character: Person,
     onClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope? = null,
-    animatedVisibilityScope: AnimatedVisibilityScope? = null
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
+    isCompact: Boolean = true
 ) {
     val baseModifier = Modifier
         .fillMaxWidth()
         .padding(vertical = 8.dp)
         .clickable { onClick() }
 
-    val cardModifier = if (sharedTransitionScope != null && animatedVisibilityScope != null) {
-        with(sharedTransitionScope) {
-            baseModifier.sharedBounds(
-                sharedContentState = rememberSharedContentState(key = "card_${character.url}"),
-                animatedVisibilityScope = animatedVisibilityScope
-            )
-        }
-    } else {
-        baseModifier
-    }
+    val cardModifier = baseModifier.safeSharedElement(
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope,
+        key = "card_${character.url}",
+        enabled = isCompact
+    )
 
     Card(modifier = cardModifier) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            val textModifier = if (sharedTransitionScope != null && animatedVisibilityScope != null) {
-                with(sharedTransitionScope) {
-                    Modifier.sharedElement(
-                        sharedContentState = rememberSharedContentState(key = "title_${character.url}"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                }
-            } else {
-                Modifier
-            }
+            val context = LocalContext.current
+            val placeholderPainter = rememberVectorPainter(Icons.Default.Person)
+            val errorPainter = rememberVectorPainter(Icons.Default.Person)
 
-            Text(
-                text = character.name,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = textModifier
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(SwapiUrlUtils.getPersonImageUrl(character.url))
+                    .crossfade(true)
+                    .build(),
+                placeholder = placeholderPainter,
+                error = errorPainter,
+                contentDescription = character.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = character.gender,
-                style = MaterialTheme.typography.bodyMedium
-            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                val textModifier = Modifier.safeSharedElement(
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    key = "title_${character.url}",
+                    enabled = isCompact
+                )
+
+                Text(
+                    text = character.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = textModifier
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = character.gender,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

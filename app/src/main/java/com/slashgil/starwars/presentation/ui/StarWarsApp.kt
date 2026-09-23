@@ -1,103 +1,90 @@
 package com.slashgil.starwars.presentation.ui
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
-import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.ui.NavDisplay
 import com.slashgil.starwars.domain.model.Person
 import com.slashgil.starwars.presentation.mvi.StarWarsIntent
 import com.slashgil.starwars.presentation.viewmodel.StarWarsViewModel
+import kotlinx.coroutines.launch
 
-sealed interface Route {
-    object Hub : Route
-    data class Spoke(val character: Person) : Route
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun StarWarsApp(viewModel: StarWarsViewModel, modifier: Modifier = Modifier) {
     val uiState by viewModel.uiState.collectAsState()
+    val navigator = rememberListDetailPaneScaffoldNavigator<Person>()
+    val coroutineScope = rememberCoroutineScope()
 
-    val backStack = remember(uiState.selectedSpokeCharacter) {
+    LaunchedEffect(uiState.selectedSpokeCharacter) {
         if (uiState.selectedSpokeCharacter != null) {
-            listOf(Route.Hub, Route.Spoke(uiState.selectedSpokeCharacter!!))
-        } else {
-            listOf(Route.Hub)
+            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+        } else if (navigator.canNavigateBack()) {
+            navigator.navigateBack()
         }
     }
 
-    val listDetailStrategy = rememberListDetailSceneStrategy<Route>()
+    BackHandler(enabled = navigator.canNavigateBack()) {
+        coroutineScope.launch {
+            navigator.navigateBack()
+            viewModel.processIntent(StarWarsIntent.OnBackToHub)
+        }
+    }
 
-    SharedTransitionLayout(modifier = modifier) {
-        NavDisplay(
-            backStack = backStack,
-            modifier = Modifier.fillMaxSize(),
-            onBack = {
-                if (uiState.selectedSpokeCharacter != null) {
-                    viewModel.processIntent(StarWarsIntent.OnBackToHub)
-                }
-            },
-            sceneStrategy = listDetailStrategy
-        ) { key ->
-            when (key) {
-                is Route.Hub -> {
-                    NavEntry<Route>(
-                        key = key,
-                        metadata = ListDetailSceneStrategy.listPane(
-                            detailPlaceholder = {
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "Select a character",
-                                        style = MaterialTheme.typography.titleLarge
-                                    )
+    ListDetailPaneScaffold(
+        modifier = modifier.fillMaxSize(),
+        directive = navigator.scaffoldDirective,
+        value = navigator.scaffoldValue,
+        listPane = {
+            AnimatedPane {
+                HubScreen(
+                    uiState = uiState,
+                    onIntent = viewModel::processIntent
+                )
+            }
+        },
+        detailPane = {
+            AnimatedPane {
+                val selectedCharacter = uiState.selectedSpokeCharacter
+                if (selectedCharacter != null) {
+                    SpokeScreen(
+                        character = selectedCharacter,
+                        onBack = {
+                            coroutineScope.launch {
+                                if (navigator.canNavigateBack()) {
+                                    navigator.navigateBack()
                                 }
+                                viewModel.processIntent(StarWarsIntent.OnBackToHub)
                             }
+                        }
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Select a character to view details",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                    ) {
-                        AnimatedVisibility(visible = true) {
-                            HubScreen(
-                                uiState = uiState,
-                                onIntent = viewModel::processIntent,
-                                sharedTransitionScope = this@SharedTransitionLayout,
-                                animatedVisibilityScope = this@AnimatedVisibility
-                            )
-                        }
-                    }
-                }
-                is Route.Spoke -> {
-                    NavEntry<Route>(
-                        key = key,
-                        metadata = ListDetailSceneStrategy.detailPane()
-                    ) {
-                        AnimatedVisibility(visible = true) {
-                            SpokeScreen(
-                                character = key.character,
-                                onBack = { viewModel.processIntent(StarWarsIntent.OnBackToHub) },
-                                sharedTransitionScope = this@SharedTransitionLayout,
-                                animatedVisibilityScope = this@AnimatedVisibility
-                            )
-                        }
                     }
                 }
             }
         }
-    }
+    )
 }

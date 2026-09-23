@@ -14,6 +14,7 @@ fun PersonDto.toDomain(): Person {
         birthYear = birthYear,
         gender = gender,
         homeworld = homeworld,
-        url = url
+        url = url,
+        films = films
     )
 }
