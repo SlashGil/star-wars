@@ -1,0 +1,4 @@
+<resources>
+
+    <style name="Theme.StarWars" parent="Theme.MaterialComponents.Light" />
+</resources>
