@@ -1,6 +1,6 @@
 package com.slashgil.starwars.di
 
-import com.slashgil.starwars.data.remote.api.SwapiService
+import com.slashgil.starwars.data.impl.SwapiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://swapi.dev/api/"
+    private const val BASE_URL = "https://swapi.info/api/"
 
     @Provides
     @Singleton

@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.slashgil.starwars.presentation.ui.StarWarsApp
-import com.slashgil.starwars.presentation.viewmodel.StarWarsViewModel
+import com.slashgil.starwars.presentation.contract.StarWarsApp
+import com.slashgil.starwars.presentation.impl.StarWarsViewModel
 import com.slashgil.starwars.ui.theme.StarWarsTheme
 import dagger.hilt.android.AndroidEntryPoint
 

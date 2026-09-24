@@ -7,6 +7,10 @@ plugins {
     alias(libs.plugins.paparazzi)
 }
 
+ksp {
+    arg("dagger.fastInit", "enabled")
+}
+
 android {
     namespace = "com.slashgil.starwars"
     compileSdk = 37
@@ -38,6 +42,27 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+}
+
+val bDir = layout.buildDirectory
+tasks.withType<JavaCompile>().configureEach {
+    val targetDir = bDir
+    doFirst {
+        val generatedDir = File(targetDir.get().asFile, "generated")
+        if (generatedDir.exists()) {
+            generatedDir.walkTopDown().filter { it.isFile && it.extension == "java" }.forEach { file ->
+                var content = file.readText()
+                if (content.contains(".public.")) {
+                    content = content.replace(".public.", ".public_.")
+                    content = content.replace(
+                        "NetworkModule.INSTANCE.provideSwapiService(retrofit)",
+                        "(SwapiService) (Object) NetworkModule.INSTANCE.provideSwapiService(retrofit)"
+                    )
+                    file.writeText(content)
+                }
+            }
+        }
     }
 }
 
