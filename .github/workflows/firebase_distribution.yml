@@ -31,6 +31,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
+      - name: Run Static Analysis
+        run: ./gradlew detekt lintDebug
+
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 

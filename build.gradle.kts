@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.paparazzi) apply false
+    alias(libs.plugins.detekt) apply false
 }

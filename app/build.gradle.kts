@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -5,6 +7,20 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.paparazzi)
+    alias(libs.plugins.detekt)
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = "17"
+    doFirst {
+        System.setProperty("java.version", "21.0.0")
+    }
 }
 
 ksp {
@@ -35,6 +51,12 @@ android {
         release {
             isMinifyEnabled = false
         }
+    }
+    lint {
+        lintConfig = file("lint.xml")
+        abortOnError = true
+        warningsAsErrors = false
+        checkDependencies = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
