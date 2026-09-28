@@ -19,6 +19,9 @@ detekt {
 
 tasks.withType<Detekt>().configureEach {
     jvmTarget = "17"
+    doFirst {
+        System.setProperty("java.version", "17.0.0")
+    }
 }
 
 ksp {
