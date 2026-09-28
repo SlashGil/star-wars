@@ -40,10 +40,22 @@ jobs:
       - name: Build Debug and Release APKs
         run: ./gradlew assembleDebug assembleRelease
 
-      - name: Upload APK to Firebase App Distribution
-        uses: w9jds/firebase-action@v11.14.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          args: appdistribution:distribute app/build/outputs/apk/debug/app-debug.apk --app ${{ secrets.FIREBASE_APP_ID }} --release-notes "Automated CI/CD build from commit ${{ github.sha }}"
+          node-version: '20'
+
+      - name: Upload APK to Firebase App Distribution
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        run: |
+          npm install --global firebase-tools
+
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_KEY" > "$RUNNER_TEMP/firebase-service-account.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-service-account.json"
+
+          firebase appdistribution:distribute \
+            app/build/outputs/apk/debug/app-debug.apk \
+            --app "$FIREBASE_APP_ID" \
+            --release-notes "Automated CI/CD build from commit $GITHUB_SHA"

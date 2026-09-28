@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.paparazzi)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.google.services)
 }
 
 detekt {
@@ -18,9 +19,6 @@ detekt {
 
 tasks.withType<Detekt>().configureEach {
     jvmTarget = "17"
-    doFirst {
-        System.setProperty("java.version", "21.0.0")
-    }
 }
 
 ksp {
@@ -90,6 +88,8 @@ tasks.withType<JavaCompile>().configureEach {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.camera.camera2)
