@@ -3,10 +3,14 @@ package com.slashgil.starwars.presentation.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.slashgil.starwars.data.contract.SettingsRepository
+import com.slashgil.starwars.domain.contract.AppFont
 import com.slashgil.starwars.domain.contract.Category
+import com.slashgil.starwars.domain.contract.ForceAllegiance
 import com.slashgil.starwars.domain.contract.GetEntitiesUseCase
 import com.slashgil.starwars.domain.contract.GetEntityByIdUseCase
 import com.slashgil.starwars.domain.contract.GetPeopleUseCase
+import com.slashgil.starwars.domain.contract.LightsaberColor
 import com.slashgil.starwars.domain.contract.SearchEntitiesUseCase
 import com.slashgil.starwars.domain.contract.SearchPeopleUseCase
 import com.slashgil.starwars.domain.contract.StarWarsEntity
@@ -32,7 +36,8 @@ class StarWarsViewModel @Inject constructor(
     private val getPeopleUseCase: GetPeopleUseCase? = null,
     private val searchPeopleUseCase: SearchPeopleUseCase? = null,
     private val getEntityByIdUseCase: GetEntityByIdUseCase? = null,
-    private val repository: StarWarsRepository? = null
+    private val repository: StarWarsRepository? = null,
+    private val settingsRepository: SettingsRepository? = null,
 ) : ViewModel() {
 
     constructor(
@@ -70,6 +75,13 @@ class StarWarsViewModel @Inject constructor(
 
     init {
         processIntent(StarWarsIntent.LoadHubData)
+        settingsRepository?.let { repo ->
+            viewModelScope.launch {
+                repo.forceSettingsFlow.collect { settings ->
+                    _uiState.update { it.copy(forceSettings = settings) }
+                }
+            }
+        }
     }
 
     fun processIntent(intent: StarWarsIntent) {
@@ -83,6 +95,29 @@ class StarWarsViewModel @Inject constructor(
             is StarWarsIntent.OnBackToHub -> goBackToHub()
             is StarWarsIntent.NavigateToRelatedEntity -> navigateToRelatedEntity(intent.category, intent.id)
             is StarWarsIntent.OnNavigateBack -> navigateBack()
+            is StarWarsIntent.OpenSettings -> _uiState.update { it.copy(isSettingsOpen = true) }
+            is StarWarsIntent.CloseSettings -> _uiState.update { it.copy(isSettingsOpen = false) }
+            is StarWarsIntent.SetAllegiance -> setAllegiance(intent.allegiance)
+            is StarWarsIntent.SetLightsaberColor -> setLightsaberColor(intent.color)
+            is StarWarsIntent.SetAppFont -> setAppFont(intent.font)
+        }
+    }
+
+    private fun setAllegiance(allegiance: ForceAllegiance) {
+        viewModelScope.launch {
+            settingsRepository?.updateAllegiance(allegiance)
+        }
+    }
+
+    private fun setLightsaberColor(color: LightsaberColor) {
+        viewModelScope.launch {
+            settingsRepository?.updateLightsaberColor(color)
+        }
+    }
+
+    private fun setAppFont(font: AppFont) {
+        viewModelScope.launch {
+            settingsRepository?.updateAppFont(font)
         }
     }
 
@@ -195,6 +230,13 @@ class StarWarsViewModel @Inject constructor(
     }
 
     private fun searchEntities(query: String) {
+        val cleanQuery = query.lowercase().trim()
+        if (cleanQuery.contains("jedi") || cleanQuery.contains("sith")) {
+            searchJob?.cancel()
+            _uiState.update { it.copy(searchQuery = "", isSettingsOpen = true) }
+            return
+        }
+
         _uiState.update { it.copy(searchQuery = query) }
 
         searchJob?.cancel()
@@ -364,7 +406,8 @@ class StarWarsViewModel @Inject constructor(
         private val searchEntitiesUseCase: SearchEntitiesUseCase,
         private val getPeopleUseCase: GetPeopleUseCase? = null,
         private val searchPeopleUseCase: SearchPeopleUseCase? = null,
-        private val getEntityByIdUseCase: GetEntityByIdUseCase? = null
+        private val getEntityByIdUseCase: GetEntityByIdUseCase? = null,
+        private val settingsRepository: SettingsRepository? = null,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -374,7 +417,8 @@ class StarWarsViewModel @Inject constructor(
                     searchEntitiesUseCase = searchEntitiesUseCase,
                     getPeopleUseCase = getPeopleUseCase,
                     searchPeopleUseCase = searchPeopleUseCase,
-                    getEntityByIdUseCase = getEntityByIdUseCase
+                    getEntityByIdUseCase = getEntityByIdUseCase,
+                    settingsRepository = settingsRepository,
                 ) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")

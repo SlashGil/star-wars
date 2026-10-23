@@ -1,6 +1,9 @@
 package com.slashgil.starwars.presentation.contract
 
+import com.slashgil.starwars.domain.contract.AppFont
 import com.slashgil.starwars.domain.contract.Category
+import com.slashgil.starwars.domain.contract.ForceAllegiance
+import com.slashgil.starwars.domain.contract.LightsaberColor
 
 sealed class StarWarsIntent {
     object LoadHubData : StarWarsIntent()
@@ -12,4 +15,9 @@ sealed class StarWarsIntent {
     object OnBackToHub : StarWarsIntent()
     data class NavigateToRelatedEntity(val category: Category, val id: String) : StarWarsIntent()
     object OnNavigateBack : StarWarsIntent()
+    object OpenSettings : StarWarsIntent()
+    object CloseSettings : StarWarsIntent()
+    data class SetAllegiance(val allegiance: ForceAllegiance) : StarWarsIntent()
+    data class SetLightsaberColor(val color: LightsaberColor) : StarWarsIntent()
+    data class SetAppFont(val font: AppFont) : StarWarsIntent()
 }

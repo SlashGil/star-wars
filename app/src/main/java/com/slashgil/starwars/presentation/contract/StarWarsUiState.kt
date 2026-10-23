@@ -1,6 +1,8 @@
 package com.slashgil.starwars.presentation.contract
 
+import androidx.compose.ui.graphics.Color
 import com.slashgil.starwars.domain.contract.Category
+import com.slashgil.starwars.domain.contract.ForceSettings
 import com.slashgil.starwars.domain.contract.Person
 import com.slashgil.starwars.domain.contract.StarWarsEntity
 import com.slashgil.starwars.domain.contract.toEntity
@@ -24,10 +26,15 @@ data class StarWarsUiState(
     val isSearchMode: Boolean = false,
     val hasReachedEnd: Boolean = false,
     val navigationStack: List<EntityRoute> = emptyList(),
+    val forceSettings: ForceSettings = ForceSettings(),
+    val isSettingsOpen: Boolean = false,
 ) {
     val displayEntities: List<StarWarsEntity>
         get() = hubEntities.ifEmpty { hubCharacters.map { it.toEntity() } }
 
     val displaySelectedEntity: StarWarsEntity?
         get() = selectedEntity ?: selectedSpokeCharacter?.toEntity()
+
+    val accentColor: Color
+        get() = forceSettings.accentColor
 }
