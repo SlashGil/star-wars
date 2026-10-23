@@ -50,7 +50,7 @@ import com.slashgil.starwars.ui.theme.StarWarsLightsaberBlue
 import com.slashgil.starwars.ui.theme.StarWarsSithRed
 import com.slashgil.starwars.ui.theme.StarWarsTextPrimary
 import com.slashgil.starwars.ui.theme.StarWarsTextSecondary
-import com.slashgil.starwars.ui.theme.StarWarsYellow
+import com.slashgil.starwars.ui.theme.StarWarsTheme
 import com.slashgil.starwars.util.capitalizeWords
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
@@ -67,20 +67,20 @@ fun HubScreen(
     val isCompact = windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = StarWarsTheme.colors.background,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = "STAR WARS",
-                        style = MaterialTheme.typography.titleLarge.copy(
+                        style = StarWarsTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                         ),
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = StarWarsBlack,
-                    titleContentColor = StarWarsYellow,
+                    titleContentColor = StarWarsTheme.colors.primary,
                 ),
             )
         },
@@ -106,7 +106,7 @@ fun HubScreen(
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Search icon",
-                        tint = StarWarsYellow,
+                        tint = StarWarsTheme.colors.primary,
                     )
                 },
                 singleLine = true,
@@ -115,13 +115,13 @@ fun HubScreen(
                     focusedContainerColor = StarWarsDarkGray,
                     unfocusedContainerColor = StarWarsDarkGray,
                     disabledContainerColor = StarWarsDarkGray,
-                    focusedBorderColor = StarWarsYellow,
+                    focusedBorderColor = StarWarsTheme.colors.primary,
                     unfocusedBorderColor = StarWarsCardBorder,
-                    cursorColor = StarWarsYellow,
+                    cursorColor = StarWarsTheme.colors.primary,
                     focusedTextColor = StarWarsTextPrimary,
                     unfocusedTextColor = StarWarsTextPrimary,
-                    focusedLeadingIconColor = StarWarsYellow,
-                    unfocusedLeadingIconColor = StarWarsYellow,
+                    focusedLeadingIconColor = StarWarsTheme.colors.primary,
+                    unfocusedLeadingIconColor = StarWarsTheme.colors.primary,
                 ),
             )
 
@@ -149,12 +149,12 @@ fun HubScreen(
                         colors = FilterChipDefaults.filterChipColors(
                             containerColor = StarWarsBlack,
                             labelColor = StarWarsTextSecondary,
-                            selectedContainerColor = StarWarsDarkGray, // #1A1A1A
-                            selectedLabelColor = StarWarsYellow, // #FFE81F
+                            selectedContainerColor = StarWarsDarkGray,
+                            selectedLabelColor = StarWarsTheme.colors.primary,
                         ),
                         border = FilterChipDefaults.filterChipBorder(
                             borderColor = StarWarsCardBorder,
-                            selectedBorderColor = StarWarsYellow,
+                            selectedBorderColor = StarWarsTheme.colors.primary,
                             borderWidth = 1.dp,
                             selectedBorderWidth = 1.dp,
                             enabled = true,
@@ -168,11 +168,11 @@ fun HubScreen(
 
             if (uiState.isLoading && displayEntities.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = StarWarsYellow)
+                    CircularProgressIndicator(color = StarWarsTheme.colors.primary)
                 }
             } else if ((uiState.error != null) && displayEntities.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = uiState.error, color = MaterialTheme.colorScheme.error)
+                    Text(text = uiState.error, color = StarWarsTheme.colors.error)
                 }
             } else {
                 LazyColumn(
@@ -202,7 +202,7 @@ fun HubScreen(
                                     .padding(16.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                CircularProgressIndicator(color = StarWarsYellow)
+                                CircularProgressIndicator(color = StarWarsTheme.colors.primary)
                             }
                         }
                     } else if (!uiState.hasReachedEnd && !uiState.isSearchMode && displayEntities.isNotEmpty()) {
@@ -298,7 +298,7 @@ fun EntityItem(
 
                 Text(
                     text = entity.name,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = StarWarsTheme.typography.titleMedium,
                     color = StarWarsTextPrimary,
                     modifier = textModifier,
                 )
@@ -330,7 +330,7 @@ fun EntityItem(
                             if (entity.model.isNotEmpty()) {
                                 AttributeBadge(
                                     text = entity.model.capitalizeWords(),
-                                    accentColor = StarWarsYellow,
+                                    accentColor = StarWarsTheme.colors.primary,
                                 )
                             }
                         }
@@ -358,14 +358,14 @@ fun EntityItem(
                             if (entity.language.isNotEmpty()) {
                                 AttributeBadge(
                                     text = entity.language.capitalizeWords(),
-                                    accentColor = StarWarsYellow,
+                                    accentColor = StarWarsTheme.colors.primary,
                                 )
                             }
                         }
                         is StarWarsEntity.FilmEntity -> {
                             AttributeBadge(
                                 text = "Episode ${entity.episodeId}",
-                                accentColor = StarWarsYellow,
+                                accentColor = StarWarsTheme.colors.primary,
                             )
                             if (entity.releaseDate.isNotEmpty()) {
                                 AttributeBadge(
@@ -424,7 +424,7 @@ fun AttributeBadge(
             )
             Text(
                 text = text.capitalizeWords(),
-                style = MaterialTheme.typography.labelSmall,
+                style = StarWarsTheme.typography.labelSmall,
                 color = StarWarsTextSecondary,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,

@@ -5,7 +5,19 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -19,7 +31,16 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.RocketLaunch
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -51,7 +72,7 @@ import com.slashgil.starwars.ui.theme.StarWarsLightsaberBlue
 import com.slashgil.starwars.ui.theme.StarWarsSithRed
 import com.slashgil.starwars.ui.theme.StarWarsTextPrimary
 import com.slashgil.starwars.ui.theme.StarWarsTextSecondary
-import com.slashgil.starwars.ui.theme.StarWarsYellow
+import com.slashgil.starwars.ui.theme.StarWarsTheme
 import com.slashgil.starwars.util.capitalizeWords
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
@@ -115,7 +136,7 @@ fun SpokeScreen(
 
     Scaffold(
         modifier = scaffoldModifier,
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = StarWarsTheme.colors.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -127,7 +148,7 @@ fun SpokeScreen(
                     )
                     Text(
                         text = entity.name,
-                        style = MaterialTheme.typography.titleLarge.copy(
+                        style = StarWarsTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                         ),
                         modifier = titleModifier,
@@ -138,14 +159,14 @@ fun SpokeScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back to Hub",
-                            tint = StarWarsYellow,
+                            tint = StarWarsTheme.colors.primary,
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = StarWarsBlack,
-                    titleContentColor = StarWarsYellow,
-                    navigationIconContentColor = StarWarsYellow,
+                    titleContentColor = StarWarsTheme.colors.primary,
+                    navigationIconContentColor = StarWarsTheme.colors.primary,
                 ),
             )
         },
@@ -221,7 +242,7 @@ fun SpokeScreen(
             if (subtitleText.isNotBlank()) {
                 Text(
                     text = subtitleText,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = StarWarsTheme.typography.bodyMedium,
                     color = StarWarsTextSecondary,
                     modifier = Modifier.padding(bottom = 12.dp),
                 )
@@ -230,8 +251,8 @@ fun SpokeScreen(
             // 2-Column Layout for Info/Stats
             Text(
                 text = "${entity.category.displayName} Details",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = StarWarsYellow,
+                style = StarWarsTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = StarWarsTheme.colors.primary,
                 modifier = Modifier.padding(vertical = 4.dp),
             )
 
@@ -342,7 +363,7 @@ fun SpokeScreen(
                 StatCard(
                     label = attr.label,
                     value = attr.value,
-                    accentColor = StarWarsYellow,
+                    accentColor = StarWarsTheme.colors.primary,
                     onClick = attr.onClick,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -384,8 +405,8 @@ fun SpokeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = "Film Appearances",
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = StarWarsYellow,
+                    style = StarWarsTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = StarWarsTheme.colors.primary,
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
                 LazyRow(
@@ -413,8 +434,8 @@ fun SpokeScreen(
                 }
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = StarWarsYellow,
+                    style = StarWarsTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = StarWarsTheme.colors.primary,
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
                 LazyRow(
@@ -436,8 +457,8 @@ fun SpokeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = "Planets",
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = StarWarsYellow,
+                    style = StarWarsTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = StarWarsTheme.colors.primary,
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
                 LazyRow(
@@ -459,8 +480,8 @@ fun SpokeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = "Starships",
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = StarWarsYellow,
+                    style = StarWarsTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = StarWarsTheme.colors.primary,
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
                 LazyRow(
@@ -482,8 +503,8 @@ fun SpokeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = "Species",
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = StarWarsYellow,
+                    style = StarWarsTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = StarWarsTheme.colors.primary,
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
                 LazyRow(
@@ -504,17 +525,9 @@ fun SpokeScreen(
     }
 }
 
-private fun extractPlanetId(homeworldUrl: String?): String? {
-    if (homeworldUrl.isNullOrBlank()) return null
-    val trimmed = homeworldUrl.trimEnd('/')
-    val lastSegment = trimmed.substringAfterLast('/')
-    return if (lastSegment.toIntOrNull() != null) {
-        lastSegment
-    } else if (homeworldUrl.toIntOrNull() != null) {
-        homeworldUrl
-    } else {
-        null
-    }
+private fun extractPlanetId(url: String?): String? {
+    if (url.isNullOrEmpty()) return null
+    return url.trimEnd('/').substringAfterLast('/')
 }
 
 private data class AttributeItem(
@@ -528,82 +541,59 @@ fun StatCard(
     label: String,
     value: String,
     accentColor: Color,
-    modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
 ) {
-    if (onClick != null) {
-        Card(
-            onClick = onClick,
-            modifier = modifier
-                .fillMaxWidth()
-                .heightIn(min = 36.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = StarWarsDarkGray,
+    Card(
+        modifier = modifier
+            .padding(vertical = 4.dp)
+            .then(
+                if (onClick != null) Modifier.clickable { onClick() } else Modifier
             ),
-            border = BorderStroke(1.dp, StarWarsCardBorder),
-            shape = RoundedCornerShape(12.dp),
-        ) {
-            StatCardContent(label = label, value = value, accentColor = accentColor)
-        }
-    } else {
-        Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .heightIn(min = 36.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = StarWarsDarkGray,
-            ),
-            border = BorderStroke(1.dp, StarWarsCardBorder),
-            shape = RoundedCornerShape(12.dp),
-        ) {
-            StatCardContent(label = label, value = value, accentColor = accentColor)
-        }
-    }
-}
-
-@Composable
-private fun StatCardContent(
-    label: String,
-    value: String,
-    accentColor: Color,
-) {
-    Column(
-        modifier = Modifier.padding(10.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = StarWarsDarkGray,
+        ),
+        border = BorderStroke(1.dp, if (onClick != null) accentColor else StarWarsCardBorder),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(),
+        Column(
+            modifier = Modifier.padding(10.dp),
         ) {
-            Text(
-                text = label.uppercase(),
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontWeight = FontWeight.Bold,
-                ),
-                color = accentColor,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Surface(
-                color = accentColor.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(4.dp),
-                border = BorderStroke(1.dp, accentColor),
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp, vertical = 1.dp)
-                        .size(6.dp)
-                        .clip(CircleShape)
-                        .background(accentColor),
+                Text(
+                    text = label.uppercase(),
+                    style = StarWarsTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    color = accentColor,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
+                Surface(
+                    color = accentColor.copy(alpha = 0.2f),
+                    shape = RoundedCornerShape(4.dp),
+                    border = BorderStroke(1.dp, accentColor),
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp, vertical = 1.dp)
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(accentColor),
+                    )
+                }
             }
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = value.ifEmpty { "unknown" }.capitalizeWords(),
+                style = StarWarsTheme.typography.bodyLarge,
+                color = StarWarsTextPrimary,
+            )
         }
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = value.ifEmpty { "unknown" }.capitalizeWords(),
-            style = MaterialTheme.typography.bodyLarge,
-            color = StarWarsTextPrimary,
-        )
     }
 }
 
@@ -656,7 +646,7 @@ fun FilmCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = film.title,
-                style = MaterialTheme.typography.labelMedium,
+                style = StarWarsTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -676,13 +666,13 @@ fun CharacterCard(
     val placeholderPainter = rememberVectorPainter(Icons.Default.Person)
     val errorPainter = rememberVectorPainter(Icons.Default.Person)
     val resolver = remember(context) { StarWarsImageResolverImpl(context) }
-    val imageUrl = remember(characterUrl) { resolver.resolveImageUrl(Category.PEOPLE, characterUrl) }
     val characterName = remember(characterUrl) { resolver.resolveCharacterName(characterUrl) }
+    val imageUrl = remember(characterUrl) { resolver.resolveCharacterImageUrl(characterUrl) }
 
     Card(
         onClick = onClick,
         modifier = modifier
-            .width(110.dp)
+            .width(120.dp)
             .padding(vertical = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
@@ -715,9 +705,9 @@ fun CharacterCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = characterName,
-                style = MaterialTheme.typography.labelMedium,
+                style = StarWarsTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 color = StarWarsTextPrimary,
             )
@@ -735,8 +725,7 @@ fun PlanetCard(
     val placeholderPainter = rememberVectorPainter(Icons.Default.Public)
     val errorPainter = rememberVectorPainter(Icons.Default.Public)
     val resolver = remember(context) { StarWarsImageResolverImpl(context) }
-    val imageUrl = remember(planetUrl) { resolver.resolveImageUrl(Category.PLANETS, planetUrl) }
-    val planetName = remember(planetUrl) { resolver.resolvePlanetName(planetUrl) }
+    val planet = remember(planetUrl) { resolver.resolvePlanetName(planetUrl) }
 
     Card(
         onClick = onClick,
@@ -755,28 +744,26 @@ fun PlanetCard(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .placeholder(R.drawable.gemini_svg)
-                    .error(R.drawable.gemini_svg)
-                    .build(),
-                placeholder = placeholderPainter,
-                error = errorPainter,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(60.dp)
                     .clip(CircleShape)
                     .background(StarWarsBlack),
-            )
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = placeholderPainter,
+                    contentDescription = null,
+                    tint = StarWarsLightsaberBlue,
+                    modifier = Modifier.size(32.dp),
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = planetName,
-                style = MaterialTheme.typography.labelMedium,
+                text = planet,
+                style = StarWarsTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 color = StarWarsTextPrimary,
             )
@@ -792,15 +779,13 @@ fun StarshipCard(
 ) {
     val context = LocalContext.current
     val placeholderPainter = rememberVectorPainter(Icons.Default.RocketLaunch)
-    val errorPainter = rememberVectorPainter(Icons.Default.RocketLaunch)
     val resolver = remember(context) { StarWarsImageResolverImpl(context) }
-    val imageUrl = remember(starshipUrl) { resolver.resolveImageUrl(Category.STARSHIPS, starshipUrl) }
     val starshipName = remember(starshipUrl) { resolver.resolveStarshipName(starshipUrl) }
 
     Card(
         onClick = onClick,
         modifier = modifier
-            .width(110.dp)
+            .width(120.dp)
             .padding(vertical = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
@@ -814,28 +799,26 @@ fun StarshipCard(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .placeholder(R.drawable.gemini_svg)
-                    .error(R.drawable.gemini_svg)
-                    .build(),
-                placeholder = placeholderPainter,
-                error = errorPainter,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(60.dp)
                     .clip(CircleShape)
                     .background(StarWarsBlack),
-            )
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = placeholderPainter,
+                    contentDescription = null,
+                    tint = StarWarsTheme.colors.primary,
+                    modifier = Modifier.size(32.dp),
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = starshipName,
-                style = MaterialTheme.typography.labelMedium,
+                style = StarWarsTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 color = StarWarsTextPrimary,
             )
@@ -851,9 +834,7 @@ fun SpeciesCard(
 ) {
     val context = LocalContext.current
     val placeholderPainter = rememberVectorPainter(Icons.Default.Pets)
-    val errorPainter = rememberVectorPainter(Icons.Default.Pets)
     val resolver = remember(context) { StarWarsImageResolverImpl(context) }
-    val imageUrl = remember(speciesUrl) { resolver.resolveImageUrl(Category.SPECIES, speciesUrl) }
     val speciesName = remember(speciesUrl) { resolver.resolveSpeciesName(speciesUrl) }
 
     Card(
@@ -873,28 +854,26 @@ fun SpeciesCard(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .placeholder(R.drawable.gemini_svg)
-                    .error(R.drawable.gemini_svg)
-                    .build(),
-                placeholder = placeholderPainter,
-                error = errorPainter,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(60.dp)
                     .clip(CircleShape)
                     .background(StarWarsBlack),
-            )
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = placeholderPainter,
+                    contentDescription = null,
+                    tint = StarWarsSithRed,
+                    modifier = Modifier.size(32.dp),
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = speciesName,
-                style = MaterialTheme.typography.labelMedium,
+                style = StarWarsTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 color = StarWarsTextPrimary,
             )
