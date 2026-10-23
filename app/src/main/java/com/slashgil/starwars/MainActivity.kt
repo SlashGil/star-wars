@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.slashgil.starwars.domain.contract.ForceSettings
 import com.slashgil.starwars.presentation.contract.StarWarsApp
 import com.slashgil.starwars.presentation.impl.SplashScreen
 import com.slashgil.starwars.presentation.impl.StarWarsViewModel
@@ -24,6 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private var latestForceSettings: ForceSettings = ForceSettings()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,7 +36,7 @@ class MainActivity : ComponentActivity() {
             val uiState by viewModel.uiState.collectAsState()
 
             LaunchedEffect(uiState.forceSettings) {
-                AppIconManager.updateIcon(this@MainActivity, uiState.forceSettings)
+                latestForceSettings = uiState.forceSettings
             }
 
             StarWarsTheme(forceSettings = uiState.forceSettings) {
@@ -58,5 +62,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        AppIconManager.updateIcon(this, latestForceSettings)
     }
 }
