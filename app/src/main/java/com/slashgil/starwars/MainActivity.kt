@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,7 @@ import com.slashgil.starwars.presentation.contract.StarWarsApp
 import com.slashgil.starwars.presentation.impl.SplashScreen
 import com.slashgil.starwars.presentation.impl.StarWarsViewModel
 import com.slashgil.starwars.ui.theme.StarWarsTheme
+import com.slashgil.starwars.util.AppIconManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,6 +30,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: StarWarsViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
+
+            LaunchedEffect(uiState.forceSettings) {
+                AppIconManager.updateIcon(this@MainActivity, uiState.forceSettings)
+            }
 
             StarWarsTheme(forceSettings = uiState.forceSettings) {
                 var showSplash by remember { mutableStateOf(true) }

@@ -14,18 +14,141 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StarWars">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.StarWars"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Default Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasDefault"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <!-- Sith Red Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasSith"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_sith"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Jedi Blue Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasJediBlue"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_jedi_blue"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Jedi Green Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasJediGreen"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_jedi_green"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Jedi Purple Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasJediPurple"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_jedi_purple"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Jedi Yellow Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasJediYellow"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_jedi_yellow"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Jedi Cyan Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasJediCyan"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_jedi_cyan"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Jedi Magenta Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasJediMagenta"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_jedi_magenta"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Jedi White Launcher Alias -->
+        <activity-alias
+            android:name=".LauncherAliasJediWhite"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_jedi_white"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
     </application>
 
 </manifest>
