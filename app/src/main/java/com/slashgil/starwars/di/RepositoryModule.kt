@@ -1,6 +1,8 @@
 package com.slashgil.starwars.di
 
 import com.slashgil.starwars.data.contract.PersonRepository
+import com.slashgil.starwars.data.contract.SettingsRepository
+import com.slashgil.starwars.data.impl.SettingsRepositoryImpl
 import com.slashgil.starwars.data.impl.StarWarsRepositoryImpl
 import com.slashgil.starwars.domain.contract.StarWarsRepository
 import dagger.Binds
@@ -24,4 +26,10 @@ abstract class RepositoryModule {
     abstract fun bindPersonRepository(
         starWarsRepositoryImpl: StarWarsRepositoryImpl
     ): PersonRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSettingsRepository(
+        settingsRepositoryImpl: SettingsRepositoryImpl
+    ): SettingsRepository
 }
