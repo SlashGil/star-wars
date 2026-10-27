@@ -424,4 +424,6 @@ class StarWarsViewModel @Inject constructor(
             throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
+
+
 }

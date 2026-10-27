@@ -148,7 +148,6 @@ fun SplashScreen(
                 text = "STAR WARS",
                 fontSize = 42.sp,
                 fontWeight = FontWeight.ExtraBold,
-                fontFamily = FontFamily.Serif,
                 color = bladeColor,
                 letterSpacing = 6.sp,
                 textAlign = TextAlign.Center,
